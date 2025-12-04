@@ -2,8 +2,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import { router } from "expo-router";
-import { get, onValue, ref, update } from "firebase/database";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { onValue, ref, update } from "firebase/database";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -20,19 +20,18 @@ import {
     View,
 } from "react-native";
 import MapView, { Circle, Marker } from "react-native-maps";
+import { UMKM_IMAGES } from "../../assets/umkm/UMKM_IMAGES";
 import { rtdb } from "../../src/firebase";
 import { Colors } from "../theme/colors";
 
 const { width, height } = Dimensions.get("window");
 
-/* ============================
-   TYPE
-============================ */
 type Point = {
     id: string;
     name?: string;
     description?: string;
     imageUri?: string | null;
+    imageLocal?: string | null;
     category?: string;
     coordinates?: string;
     latitude?: number;
@@ -41,9 +40,6 @@ type Point = {
     createdAt?: number;
 };
 
-/* ============================
-   MOOD BARU — ARTISAN CREATIVE
-============================ */
 const MOODS = [
     { key: "all", label: "All", color: Colors.card, emoji: "✨" },
     { key: "inspirational", label: "Inspirational", color: "#FFE45E", emoji: "💡" },
@@ -53,9 +49,6 @@ const MOODS = [
     { key: "modern", label: "Modern", color: "#6FB7FF", emoji: "🎧" },
 ];
 
-/* ============================
-   PARSE COORDINATE
-============================ */
 function parseCoords(coordStr?: string | null) {
     if (!coordStr) return null;
     let cleaned = coordStr.replace(/[^\d.,\-]/g, "").replace(/\s+/g, "").trim();
@@ -68,9 +61,32 @@ function parseCoords(coordStr?: string | null) {
     return { latitude: lat, longitude: lng };
 }
 
-/* ============================
-   MAIN SCREEN
-============================ */
+function resolveImageSource(p?: Point | null) {
+    const placeholder = { uri: "https://placehold.co/800x480?text=No+Image" };
+    if (!p) return placeholder;
+
+    const imageUri = (p as any).imageUri;
+    const imageLocal = (p as any).imageLocal ?? (p as any).image;
+
+    if (imageUri && typeof imageUri === "string") {
+        if (imageUri.startsWith("http") || imageUri.startsWith("data:") || imageUri.startsWith("file:")) {
+            return { uri: imageUri };
+        }
+    }
+
+    if (imageLocal && typeof imageLocal === "string") {
+        if (imageLocal.startsWith("http") || imageLocal.startsWith("data:") || imageLocal.startsWith("file:")) {
+            return { uri: imageLocal };
+        }
+        try {
+            const mapped = (UMKM_IMAGES as any)?.[imageLocal];
+            if (mapped) return mapped;
+        } catch { }
+    }
+
+    return placeholder;
+}
+
 export default function MoodMapScreen() {
     const [points, setPoints] = useState<Point[]>([]);
     const [loading, setLoading] = useState(true);
@@ -83,13 +99,11 @@ export default function MoodMapScreen() {
     const sheetVisible = useRef(false);
 
     const confettiScale = useRef(new Animated.Value(0)).current;
-
     const mapRef = useRef<MapView | null>(null);
-    const [refreshing, setRefreshing] = useState(false);
 
-    /* ============================
-       GET LOCATION
-    ============================= */
+    const isOpening = useRef(false);
+
+    // GET LOCATION
     useEffect(() => {
         (async () => {
             try {
@@ -100,12 +114,10 @@ export default function MoodMapScreen() {
                     return;
                 }
 
-                let loc;
+                let loc = null;
                 try {
                     loc = await Location.getCurrentPositionAsync({});
-                } catch {
-                    loc = null;
-                }
+                } catch { }
 
                 if (loc) {
                     setUserLoc({
@@ -122,156 +134,81 @@ export default function MoodMapScreen() {
         })();
     }, []);
 
-    /* ============================
-       REALTIME LISTENER
-    ============================= */
+    // REALTIME MARKER UPDATE
     useEffect(() => {
         const pointsRef = ref(rtdb, "points/");
-        const unsub = onValue(pointsRef, (snap) => {
+        return onValue(pointsRef, (snap) => {
             const raw = snap.val();
             if (!raw) return setPoints([]);
 
-            const parsed: Point[] = Object.keys(raw)
+            const parsed = Object.keys(raw)
                 .map((id) => {
                     const p = raw[id];
                     const coords = parseCoords(p.coordinates);
                     if (!coords) return null;
-                    return {
-                        id,
-                        ...p,
-                        latitude: coords.latitude,
-                        longitude: coords.longitude,
-                    } as Point;
+                    return { id, ...p, latitude: coords.latitude, longitude: coords.longitude } as Point;
                 })
                 .filter(Boolean) as Point[];
 
             setPoints(parsed);
         });
-
-        return () => unsub();
     }, []);
 
-    /* ============================
-       MANUAL REFRESH
-    ============================= */
-    const fetchOnce = useCallback(async () => {
-        try {
-            setRefreshing(true);
-            const snap = await get(ref(rtdb, "points/"));
-            const raw = snap.val();
-            if (!raw) return setPoints([]);
-
-            const parsed: Point[] = Object.keys(raw)
-                .map((id) => {
-                    const p = raw[id];
-                    const coords = parseCoords(p.coordinates);
-                    if (!coords) return null;
-                    return {
-                        id,
-                        ...p,
-                        latitude: coords.latitude,
-                        longitude: coords.longitude,
-                    } as Point;
-                })
-                .filter(Boolean) as Point[];
-
-            setPoints(parsed);
-        } finally {
-            setRefreshing(false);
-        }
-    }, []);
-
-    /* ============================
-       FILTER BY MOOD
-    ============================= */
     const visiblePoints = useMemo(() => {
         if (filterMood === "all") return points;
         return points.filter((p) => (p.mood ?? "").toLowerCase() === filterMood);
     }, [points, filterMood]);
 
-    /* ============================
-       ANALYTICS
-    ============================= */
-    const analytics = useMemo(() => {
-        const tally: Record<string, number> = {
-            inspirational: 0,
-            handmade: 0,
-            aesthetic: 0,
-            heritage: 0,
-            modern: 0,
-        };
-
-        points.forEach((p) => {
-            const mood = (p.mood ?? "").toLowerCase();
-            if (tally[mood] !== undefined) tally[mood] += 1;
-        });
-
-        const entries = Object.entries(tally).sort((a, b) => b[1] - a[1]);
-        const top = entries.find((e) => e[1] > 0);
-
-        return {
-            mostCommon: top ? top[0] : "none",
-            mostCount: top ? top[1] : 0,
-            tally,
-        };
-    }, [points]);
-
-    /* ============================
-       SHEET CONTROL
-    ============================= */
+    // OPEN BOTTOM SHEET
     const openSheet = (p: Point) => {
+        if (isOpening.current) return;
+        isOpening.current = true;
+
         setSelectedPoint(p);
-        sheetVisible.current = true;
-        Animated.spring(sheetY, { toValue: height * 0.28, useNativeDriver: true }).start();
+
+        Animated.spring(sheetY, {
+            toValue: height * 0.28,
+            useNativeDriver: true,
+        }).start(() => {
+            sheetVisible.current = true;
+            setTimeout(() => (isOpening.current = false), 150);
+        });
     };
 
     const closeSheet = () => {
-        Animated.timing(sheetY, { toValue: height, duration: 260, useNativeDriver: true }).start(() => {
-            sheetVisible.current = false;
+        Animated.timing(sheetY, {
+            toValue: height,
+            duration: 260,
+            useNativeDriver: true,
+        }).start(() => {
             setSelectedPoint(null);
+            sheetVisible.current = false;
         });
     };
 
-    /* ============================
-       SAVE MOOD TO FIREBASE
-    ============================= */
-    const setMood = async (pointId: string, moodKey: string) => {
-        try {
-            await update(ref(rtdb, `points/${pointId}`), { mood: moodKey });
-
-            Animated.sequence([
-                Animated.timing(confettiScale, { toValue: 1.2, duration: 220, useNativeDriver: true }),
-                Animated.timing(confettiScale, { toValue: 0, duration: 220, useNativeDriver: true }),
-            ]).start();
-        } catch (err) {
-            Alert.alert("Gagal menyimpan mood", String(err));
-        }
+    // SAVE MOOD
+    const setMood = async (id: string, m: string) => {
+        await update(ref(rtdb, `points/${id}`), { mood: m });
+        Animated.sequence([
+            Animated.timing(confettiScale, { toValue: 1.2, duration: 200, useNativeDriver: true }),
+            Animated.timing(confettiScale, { toValue: 0, duration: 200, useNativeDriver: true }),
+        ]).start();
     };
 
-    /* ============================
-       LOADING SCREEN
-    ============================= */
     if (loading || !userLoc) {
         return (
             <View style={[styles.center, { backgroundColor: Colors.bg }]}>
                 <ActivityIndicator size="large" color={Colors.accent} />
-                <Text style={{ color: Colors.textSoft, marginTop: 12 }}>Memuat MoodCraft…</Text>
+                <Text style={{ color: Colors.textSoft, marginTop: 10 }}>Memuat mood map…</Text>
             </View>
         );
     }
-
-    /* ============================
-       MAIN RENDER
-    ============================= */
     return (
         <View style={styles.wrap}>
-
-            {/* === TOOLBAR === */}
+            {/* TOOLBAR */}
             <View style={styles.toolbarWrapper}>
                 <View style={styles.toolbar}>
                     <View style={styles.toolbarRow}>
-
-                        {/* Mood Buttons */}
                         <View style={{ flexDirection: "row", gap: 6 }}>
                             {MOODS.map((m) => (
                                 <TouchableOpacity
@@ -294,47 +231,28 @@ export default function MoodMapScreen() {
                             ))}
                         </View>
 
-                        <View style={{ width: 6 }} />
-
-                        <TouchableOpacity onPress={fetchOnce} style={styles.iconBtn}>
-                            <Ionicons name="refresh" size={18} color={Colors.text} />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={() => {
-                            if (!mapRef.current) return;
-                            mapRef.current.animateToRegion({
-                                latitude: userLoc.latitude,
-                                longitude: userLoc.longitude,
-                                latitudeDelta: 0.05,
-                                longitudeDelta: 0.05,
-                            }, 500);
-                        }} style={styles.iconBtn}>
-                            <Ionicons name="locate" size={18} color={Colors.text} />
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => router.push("/forminputlocation")}
-                            style={styles.iconBtn}
-                        >
+                        <TouchableOpacity onPress={() => router.push("/forminputlocation")} style={styles.iconBtn}>
                             <Ionicons name="add" size={18} color={Colors.text} />
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
 
-            {/* === MAP === */}
+            {/* MAP */}
             <MapView
                 ref={mapRef}
                 style={styles.map}
                 initialRegion={{
                     latitude: -7.8995,
                     longitude: 110.3310,
-                    latitudeDelta: 0.008,
-                    longitudeDelta: 0.008,
+                    latitudeDelta: 0.009,
+                    longitudeDelta: 0.009,
                 }}
-                customMapStyle={[]}
+                onPress={() => {
+                    if (sheetVisible.current) closeSheet();
+                }}
             >
-                {/* user accuracy */}
+                {/* user location accuracy */}
                 <Circle
                     center={{ latitude: userLoc.latitude, longitude: userLoc.longitude }}
                     radius={userLoc.accuracy || 40}
@@ -342,7 +260,7 @@ export default function MoodMapScreen() {
                     fillColor={Colors.accent2 + "22"}
                 />
 
-                {/* 200m radius */}
+                {/* user radius 200m */}
                 <Circle
                     center={{ latitude: userLoc.latitude, longitude: userLoc.longitude }}
                     radius={200}
@@ -350,58 +268,44 @@ export default function MoodMapScreen() {
                     fillColor={Colors.accent2 + "18"}
                 />
 
-                {/* markers */}
+                {/* MARKERS */}
                 {visiblePoints.map((p) => {
+                    if (!p.latitude || !p.longitude) return null;
+
                     const moodKey = (p.mood ?? "none").toLowerCase();
                     const moodDef = MOODS.find((m) => m.key === moodKey) ?? MOODS[0];
 
                     return (
                         <Marker
                             key={p.id}
-                            coordinate={{ latitude: p.latitude!, longitude: p.longitude! }}
+                            coordinate={{ latitude: p.latitude, longitude: p.longitude }}
+                            tracksViewChanges={true} // FIX marker hilang
                             anchor={{ x: 0.5, y: 1 }}
-                            onPress={() => openSheet(p)}
+                            onPress={(e) => {
+                                e.stopPropagation();
+                                openSheet(p);
+                            }}
                         >
-                            <View style={{ alignItems: "center" }}>
-                                <View
-                                    style={{
-                                        width: 28,
-                                        height: 28,
-                                        backgroundColor: moodDef.color,
-                                        borderRadius: 14,
-                                        borderWidth: 2,
-                                        borderColor: "white",
-                                    }}
-                                />
-                                <Text style={{ fontSize: 12 }}>{moodDef.emoji}</Text>
+                            <View style={styles.markerWrap}>
+                                <View style={[styles.markerCircle, { backgroundColor: moodDef.color }]} />
+                                <Text style={styles.markerEmoji}>{moodDef.emoji}</Text>
                             </View>
                         </Marker>
                     );
                 })}
             </MapView>
 
-            {/* === ANALYTICS WIDGET === */}
-            <TouchableOpacity
-                style={styles.analyticsWrap}
-                onPress={() => router.push("/umkm-list")}
-            >
-                <Text style={styles.analyticsText}>
-                    {analytics.mostCommon === "none"
-                        ? "Belum ada mood ditetapkan"
-                        : `Top Mood: ${analytics.mostCommon.toUpperCase()} (${analytics.mostCount})`}
-                </Text>
-            </TouchableOpacity>
-
-            {/* === SLIDE SHEET === */}
-            <Animated.View
-                style={[styles.sheet, { transform: [{ translateY: sheetY }] }]}
-                pointerEvents={sheetVisible.current ? "auto" : "none"}
-            >
+            {/* SLIDE SHEET */}
+            <Animated.View style={[styles.sheet, { transform: [{ translateY: sheetY }] }]}>
                 <View style={styles.sheetHandle} />
 
-                {selectedPoint ? (
+                {selectedPoint && (
                     <View style={styles.sheetInner}>
-                        <Image source={{ uri: selectedPoint.imageUri ?? undefined }} style={styles.sheetImage} />
+                        <Image
+                            source={resolveImageSource(selectedPoint)}
+                            style={styles.sheetImage}
+                            resizeMode="cover"
+                        />
 
                         <View style={{ paddingHorizontal: 14, paddingTop: 10 }}>
                             <Text style={styles.sheetTitle}>{selectedPoint.name}</Text>
@@ -409,8 +313,9 @@ export default function MoodMapScreen() {
 
                             <View style={{ height: 12 }} />
 
-                            <Text style={styles.sheetLabel}>Set Mood Kerajinan</Text>
-                            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 10 }}>
+                            <Text style={styles.sheetLabel}>Set Mood</Text>
+
+                            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 12, marginTop: 12 }}>
                                 {MOODS.slice(1).map((m) => (
                                     <Pressable
                                         key={m.key}
@@ -424,10 +329,7 @@ export default function MoodMapScreen() {
                             </View>
 
                             <View style={styles.sheetBtnRow}>
-                                <TouchableOpacity
-                                    onPress={closeSheet}
-                                    style={[styles.sheetBtn, { backgroundColor: Colors.card }]}
-                                >
+                                <TouchableOpacity onPress={closeSheet} style={[styles.sheetBtn, { backgroundColor: Colors.card }]}>
                                     <Text style={{ color: Colors.text }}>Tutup</Text>
                                 </TouchableOpacity>
 
@@ -435,12 +337,14 @@ export default function MoodMapScreen() {
                                     onPress={() => {
                                         const lat = selectedPoint.latitude;
                                         const lng = selectedPoint.longitude;
+
                                         const url =
                                             Platform.OS === "android"
                                                 ? `geo:${lat},${lng}?q=${lat},${lng}`
                                                 : `maps://?q=${lat},${lng}`;
+
                                         Linking.openURL(url).catch(() =>
-                                            Alert.alert("Peta", `Koordinat: ${lat}, ${lng}`)
+                                            Alert.alert("Lokasi", `Koordinat: ${lat}, ${lng}`)
                                         );
                                     }}
                                     style={[styles.sheetBtn, { backgroundColor: Colors.accent }]}
@@ -450,7 +354,7 @@ export default function MoodMapScreen() {
                             </View>
                         </View>
                     </View>
-                ) : null}
+                )}
             </Animated.View>
 
             {/* CONFETTI */}
@@ -469,14 +373,11 @@ export default function MoodMapScreen() {
             >
                 <Text style={{ fontSize: 28 }}>🎉</Text>
             </Animated.View>
-
         </View>
     );
 }
 
-/* ============================
-   STYLES
-============================ */
+/* STYLES */
 const TOOLBAR_TOP = (StatusBar.currentHeight ?? 24) + 8;
 
 const styles = StyleSheet.create({
@@ -493,6 +394,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 14,
         alignItems: "center",
     },
+
     toolbar: {
         width: "100%",
         backgroundColor: Colors.bgSoft + "EE",
@@ -501,15 +403,12 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         borderWidth: 1,
         borderColor: Colors.card,
-        shadowColor: Colors.accent,
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
     },
+
     toolbarRow: {
         flexDirection: "row",
-        alignItems: "center",
         justifyContent: "space-between",
-        gap: 8,
+        alignItems: "center",
     },
 
     moodBtn: {
@@ -522,47 +421,30 @@ const styles = StyleSheet.create({
         minWidth: 40,
         alignItems: "center",
     },
+
     moodBtnText: { color: Colors.text, fontWeight: "700", fontSize: 16 },
 
     iconBtn: {
         backgroundColor: Colors.card,
         padding: 8,
         borderRadius: 10,
+        marginLeft: 8,
     },
 
-    map: { flex: 1 },
-
-    /* ANALYTICS */
-    analyticsWrap: {
-        position: "absolute",
-        bottom: 26,
-        left: 20,
-        right: 20,
-        alignItems: "center",
-        zIndex: 900,
-    },
-    analyticsText: {
-        backgroundColor: Colors.bgSoft + "DD",
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        borderRadius: 14,
-        color: Colors.textSoft,
-        fontWeight: "700",
+    map: {
+        flex: 1,
+        marginTop: TOOLBAR_TOP + 60,
     },
 
-    /* SHEET */
     sheet: {
         position: "absolute",
         left: 0,
         right: 0,
-        height: height * 0.72,
+        height: height * 0.7,
         backgroundColor: Colors.bg,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         zIndex: 999,
-        shadowColor: "#000",
-        shadowOpacity: 0.2,
-        shadowRadius: 18,
     },
 
     sheetHandle: {
@@ -574,9 +456,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
 
-    sheetInner: {
-        flex: 1,
-    },
+    sheetInner: { flex: 1 },
 
     sheetImage: {
         width: "100%",
@@ -599,6 +479,7 @@ const styles = StyleSheet.create({
     sheetLabel: {
         color: Colors.textSoft,
         fontWeight: "700",
+        marginTop: 10,
     },
 
     moodPickerBtn: {
@@ -624,8 +505,8 @@ const styles = StyleSheet.create({
     sheetBtnRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginTop: 20,
-        marginBottom: 30,
+        marginTop: 16,
+        marginBottom: 26,
     },
 
     sheetBtn: {
@@ -645,5 +526,29 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         zIndex: 2000,
+    },
+
+    // MARKER FIXED STYLE
+    markerWrap: {
+        width: 50,
+        height: 55,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
+    markerCircle: {
+        width: 38,
+        height: 38,
+        borderRadius: 20,
+        borderWidth: 2,
+        borderColor: "#fff",
+        backgroundColor: Colors.card,
+    },
+
+    markerEmoji: {
+        position: "absolute",
+        fontSize: 20,
+        top: 7,
+        textAlign: "center",
     },
 });
