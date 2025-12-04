@@ -1,24 +1,28 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/use-color-scheme';
-
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+// app/_layout.tsx
+import React from "react";
+import { Slot } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View, StatusBar } from "react-native";
+import { Colors } from "./theme/colors";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+    return (
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaProvider>
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+                {/* Status bar dengan tema artisan */}
+                <StatusBar
+                    barStyle="light-content"
+                    backgroundColor={Colors.bg}
+                />
+
+                {/* Semua screen di bawah folder /app akan dirender di sini */}
+                <View style={{ flex: 1, backgroundColor: Colors.bg }}>
+                    <Slot />
+                </View>
+
+            </SafeAreaProvider>
+        </GestureHandlerRootView>
+    );
 }

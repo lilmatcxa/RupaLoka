@@ -1,0 +1,306 @@
+[
+    {
+        "id": "batik-sabdo-01",
+        "name": "Batik Tulis Sabdodadi",
+        "description": "UMKM batik tulis tradisional dengan motif khas Bantul.",
+        "category": "batik",
+        "coordinates": "-7.893210,110.330821",
+        "imageLocal": "batik_sabdo1.jpg",
+        "mood": "heritage",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "batik",
+            "heritage"
+        ]
+    },
+    {
+        "id": "batik-sabdo-02",
+        "name": "Rumah Batik Sabdo",
+        "description": "Batik rumah produksi, melayani pesanan kain dan pakaian batik.",
+        "category": "batik",
+        "coordinates": "-7.893800,110.331300",
+        "imageLocal": "batik_sabdo2.jpg",
+        "mood": "aesthetic",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "batik",
+            "workshop"
+        ]
+    },
+    {
+        "id": "gerabah-sabdo-01",
+        "name": "Gerabah Sabdodadi Pottery",
+        "description": "Workshop gerabah lokal, memproduksi vas dan hiasan keramik.",
+        "category": "gerabah",
+        "coordinates": "-7.896520,110.327910",
+        "imageLocal": "gerabah_sabdo1.jpg",
+        "mood": "handmade",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "gerabah",
+            "pottery"
+        ]
+    },
+    {
+        "id": "gerabah-sabdo-02",
+        "name": "Studio Gerabah Sabdo",
+        "description": "Pengrajin gerabah dengan finishing warna alami.",
+        "category": "gerabah",
+        "coordinates": "-7.897200,110.328200",
+        "imageLocal": "gerabah_sabdo2.jpg",
+        "mood": "heritage",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "ceramic",
+            "artisan"
+        ]
+    },
+    {
+        "id": "perak-sabdo-01",
+        "name": "SilverCraft Sabdodadi",
+        "description": "Workshop perak kecil dengan desain modern dan ukir halus.",
+        "category": "perak",
+        "coordinates": "-7.892800,110.334200",
+        "imageLocal": "perak_sabdo1.jpg",
+        "mood": "aesthetic",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "perak",
+            "jewelry"
+        ]
+    },
+    {
+        "id": "perak-sabdo-02",
+        "name": "Perak Mini Sabdo",
+        "description": "Cabang pengrajin Kotagede—perhiasan custom dan suvenir.",
+        "category": "perak",
+        "coordinates": "-7.892500,110.333900",
+        "imageLocal": "perak_sabdo2.jpg",
+        "mood": "modern",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "perak",
+            "craft"
+        ]
+    },
+    {
+        "id": "kayu-sabdo-01",
+        "name": "Woodcraft Sabdodadi",
+        "description": "Kerajinan kayu: ukiran, patung, dekorasi rumah.",
+        "category": "kayu",
+        "coordinates": "-7.895120,110.331542",
+        "imageLocal": "kayu_sabdo1.jpg",
+        "mood": "handmade",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "wood",
+            "carving"
+        ]
+    },
+    {
+        "id": "kayu-sabdo-02",
+        "name": "Ukiran Kayu Sabdo",
+        "description": "Pengrajin kayu tradisional, melayani pesanan custom.",
+        "category": "kayu",
+        "coordinates": "-7.895600,110.331000",
+        "imageLocal": "kayu_sabdo2.jpg",
+        "mood": "inspirational",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "woodwork",
+            "artisan"
+        ]
+    },
+    {
+        "id": "kulit-manding-01",
+        "name": "Manding Leather Artisan",
+        "description": "Pengrajin kulit Manding: tas, dompet, dan aksesori handmade.",
+        "category": "kulit",
+        "coordinates": "-7.901344,110.331727",
+        "imageLocal": "manding_leather1.jpg",
+        "mood": "handmade",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "leather",
+            "manding"
+        ]
+    },
+    {
+        "id": "kulit-manding-02",
+        "name": "Omah Kulit Manding",
+        "description": "Toko & workshop kulit dengan desain modern.",
+        "category": "kulit",
+        "coordinates": "-7.901052,110.331490",
+        "imageLocal": "manding_leather2.jpg",
+        "mood": "aesthetic",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "leather",
+            "studio"
+        ]
+    },
+    {
+        "id": "anyam-sabdo-01",
+        "name": "Anyaman Sabdodadi Creative",
+        "description": "Anyaman bambu & pandan untuk kebutuhan rumah tangga.",
+        "category": "anyaman",
+        "coordinates": "-7.897810,110.329830",
+        "imageLocal": "anyaman_sabdo1.jpg",
+        "mood": "heritage",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "woven",
+            "bamboo"
+        ]
+    },
+    {
+        "id": "anyam-sabdo-02",
+        "name": "Sabdodadi Woven Studio",
+        "description": "Anyaman modern: lamp shade, pot gantung, dekor interior.",
+        "category": "anyaman",
+        "coordinates": "-7.898690,110.330100",
+        "imageLocal": "anyaman_sabdo2.jpg",
+        "mood": "modern",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "woven",
+            "design"
+        ]
+    },
+    {
+        "id": "studio-modern-01",
+        "name": "Kalingga Leather Art",
+        "description": "Workshop kulit custom dan workshop desain.",
+        "category": "kulit",
+        "coordinates": "-7.901889,110.332159",
+        "imageLocal": "studio_modern1.jpg",
+        "mood": "inspirational",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "leather",
+            "custom"
+        ]
+    },
+    {
+        "id": "studio-modern-02",
+        "name": "Manding Artisanal Studio",
+        "description": "Studio produk premium, desain modern dan artisanal.",
+        "category": "kulit",
+        "coordinates": "-7.902450,110.331950",
+        "imageLocal": "studio_modern2.jpg",
+        "mood": "aesthetic",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "premium",
+            "studio"
+        ]
+    },
+    {
+        "id": "souvenir-sabdo-01",
+        "name": "Sentra Kulit Manding Blok A",
+        "description": "Deretan toko kulit klasik: dompet, sabuk, tas kecil.",
+        "category": "kulit",
+        "coordinates": "-7.901601,110.331923",
+        "imageLocal": "manding_leather1.jpg",
+        "mood": "heritage",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "souvenir",
+            "market"
+        ]
+    },
+    {
+        "id": "souvenir-sabdo-02",
+        "name": "Sentra Kulit Manding Blok B",
+        "description": "Pusat souvenir kulit dan aksesoris kecil.",
+        "category": "kulit",
+        "coordinates": "-7.901300,110.331600",
+        "imageLocal": "manding_leather2.jpg",
+        "mood": "handmade",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "souvenir",
+            "small"
+        ]
+    },
+    {
+        "id": "gerabah-sabdo-03",
+        "name": "Ceramic Corner Sabdo",
+        "description": "Gerabah & keramik hiasan rumah tangga.",
+        "category": "gerabah",
+        "coordinates": "-7.896900,110.327600",
+        "imageLocal": "gerabah_sabdo2.jpg",
+        "mood": "handmade",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "ceramic",
+            "home"
+        ]
+    },
+    {
+        "id": "batik-sabdo-03",
+        "name": "Atelier Batik Sabdodadi",
+        "description": "Atelier batik dengan kelas workshop batik untuk wisatawan.",
+        "category": "batik",
+        "coordinates": "-7.893500,110.331000",
+        "imageLocal": "batik_sabdo2.jpg",
+        "mood": "inspirational",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "batik",
+            "workshop"
+        ]
+    },
+    {
+        "id": "anyam-sabdo-03",
+        "name": "Woven & Co Sabdodadi",
+        "description": "Anyaman modern dan aksesoris interior.",
+        "category": "anyaman",
+        "coordinates": "-7.898200,110.330400",
+        "imageLocal": "anyaman_sabdo2.jpg",
+        "mood": "aesthetic",
+        "createdBy": "seed",
+        "status": "published",
+        "verified": true,
+        "tags": [
+            "woven",
+            "decor"
+        ]
+    }
+]

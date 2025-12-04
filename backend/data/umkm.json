@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Bubur Bu Siti",
+        "lat": -7.9131,
+        "lng": 110.329,
+        "tags": [
+            "pagi"
+        ],
+        "photo": "https://placehold.co/600x400?text=Bubur"
+    },
+    {
+        "id": 2,
+        "name": "Mie Ayam Pak Pendek",
+        "lat": -7.9123,
+        "lng": 110.3278,
+        "tags": [
+            "siang"
+        ],
+        "photo": "https://placehold.co/600x400?text=Mie+Ayam"
+    },
+    {
+        "id": 3,
+        "name": "Sate Klatak Pak Joko",
+        "lat": -7.9105,
+        "lng": 110.325,
+        "tags": [
+            "malam"
+        ],
+        "photo": "https://placehold.co/600x400?text=Sate"
+    },
+    {
+        "id": 4,
+        "name": "Kelontong Serba Ada",
+        "lat": -7.9128,
+        "lng": 110.3265,
+        "tags": [
+            "all_day"
+        ],
+        "photo": "https://placehold.co/600x400?text=Kelontong"
+    }
+]

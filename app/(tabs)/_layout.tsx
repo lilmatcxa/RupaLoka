@@ -1,35 +1,71 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+// app/(tabs)/_layout.tsx
 
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React from "react";
+import { Colors } from "../theme/colors";
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+function icon(name: string) {
+    return (props: any) => <Ionicons name={name as any} {...props} />;
+}
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+export default function TabsLayout() {
+    return (
+        <Tabs
+            screenOptions={{
+                headerShown: false,
+                tabBarStyle: {
+                    backgroundColor: Colors.bgSoft,
+                    borderTopColor: Colors.card,
+                },
+                tabBarActiveTintColor: Colors.accent,
+                tabBarInactiveTintColor: Colors.textSoft,
+            }}
+        >
+            {/* DISCOVER HOME */}
+            <Tabs.Screen
+                name="index"
+                options={{
+                    title: "Discover",
+                    tabBarIcon: icon("sparkles"),
+                }}
+            />
+
+            {/* CRAFT MAP */}
+            <Tabs.Screen
+                name="gmap"
+                options={{
+                    title: "CraftMap",
+                    tabBarIcon: icon("map"),
+                }}
+            />
+
+            {/* EXPLORE UMKM */}
+            <Tabs.Screen
+                name="explore"
+                options={{
+                    title: "Explore",
+                    tabBarIcon: icon("search"),
+                }}
+            />
+
+            {/* UMKM LIST */}
+            <Tabs.Screen
+                name="umkm-list"
+                options={{
+                    title: "UMKM",
+                    tabBarIcon: icon("storefront"),
+                }}
+            />
+
+            {/* MOOD MAP */}
+            <Tabs.Screen
+                name="mood-map"
+                options={{
+                    title: "MoodCraft",
+                    tabBarIcon: icon("color-palette"),
+                }}
+            />
+        </Tabs>
+    );
 }

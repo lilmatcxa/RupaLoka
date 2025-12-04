@@ -1,41 +1,73 @@
-// Fallback for using MaterialIcons on Android and web.
-
+// Dual fallback: MaterialIcons (default) + FontAwesome5 (opsional)
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { SymbolWeight, SymbolViewProps } from 'expo-symbols';
-import { ComponentProps } from 'react';
-import { OpaqueColorValue, type StyleProp, type TextStyle } from 'react-native';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { SymbolWeight } from 'expo-symbols';
+import { OpaqueColorValue, StyleProp, TextStyle, Platform } from 'react-native';
 
-type IconMapping = Record<SymbolViewProps['name'], ComponentProps<typeof MaterialIcons>['name']>;
+type IconMapping = Record<string, string>;
 type IconSymbolName = keyof typeof MAPPING;
 
 /**
- * Add your SF Symbols to Material Icons mappings here.
- * - see Material Icons in the [Icons Directory](https://icons.expo.fyi).
- * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
+ * Add your SF Symbols to Material Icons / FontAwesome mappings here.
+ * - Material Icons: https://icons.expo.fyi/
+ * - FontAwesome5: https://fontawesome.com/icons
+ * - SF Symbols: https://developer.apple.com/sf-symbols/
  */
-const MAPPING = {
-  'house.fill': 'home',
-  'paperplane.fill': 'send',
+const MAPPING: IconMapping = {
+  'house.fill': 'home-work',
+  'paperplane.fill': 'flight-takeoff',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-} as IconMapping;
+  'plus.circle.fill': 'my-library-add',
+  'usergraduate.fill': 'nature-people', // ← perbaiki di sini
+  'list': 'format-list-bulleted',
+  'map.fill': 'map',
+
+
+} as const;
+
 
 /**
- * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
- * This ensures a consistent look across platforms, and optimal resource usage.
- * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
+ * An icon component that uses Material Icons on Android/Web
+ * and FontAwesome5 on iOS as fallback (for SF Symbol style).
  */
 export function IconSymbol({
   name,
   size = 24,
   color,
   style,
+  useFontAwesome = false,
 }: {
   name: IconSymbolName;
   size?: number;
   color: string | OpaqueColorValue;
   style?: StyleProp<TextStyle>;
   weight?: SymbolWeight;
+  /** Optional prop: force using FontAwesome instead of Material */
+  useFontAwesome?: boolean;
 }) {
-  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
+  const isIOS = Platform.OS === 'ios' || useFontAwesome;
+
+  if (isIOS) {
+    return (
+      <FontAwesome5
+        color={color}
+        size={size}
+        // 👇 Cast supaya TS tidak error
+        name={MAPPING[name] as any}
+        style={style}
+        solid
+      />
+    );
+  }
+
+  return (
+    <MaterialIcons
+      color={color}
+      size={size}
+      // 👇 Cast supaya TS tidak error
+      name={MAPPING[name] as any}
+      style={style}
+    />
+  );
 }
