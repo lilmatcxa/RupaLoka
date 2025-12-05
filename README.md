@@ -135,15 +135,29 @@ Digunakan untuk fitur UMKM List.
 
 ### **1. Halaman Discover (Gacha Kerajinan)**
 
-![Discover Screen](https://via.placeholder.com/900x500?text=Discover+Screen)
+<img width="495" height="876" alt="image" src="https://github.com/user-attachments/assets/d639af11-2d9d-4608-a46a-b7940e48ed98" />
+
+<img width="458" height="867" alt="image" src="https://github.com/user-attachments/assets/466ee019-fa64-4aa3-b67b-d3f2800c7a99" />
+
 
 ### **2. CraftMap + Marker**
 
-![CraftMap](https://via.placeholder.com/900x500?text=CraftMap+Screen)
+<img width="482" height="870" alt="image" src="https://github.com/user-attachments/assets/c3e8e3ec-3d02-460e-9daf-43ff38edfa62" />
+
+<img width="339" height="383" alt="image" src="https://github.com/user-attachments/assets/103a2a15-8da4-4a39-b7e9-54bbda652c35" />
+<img width="444" height="875" alt="image" src="https://github.com/user-attachments/assets/7f8d0bcd-f521-4307-9446-6791f868b6e4" />
+<img width="464" height="879" alt="image" src="https://github.com/user-attachments/assets/a6fe0eba-726f-4c57-8039-829cd59496bd" />
+
+<img width="445" height="872" alt="image" src="https://github.com/user-attachments/assets/ec771054-535f-4fb4-8d63-9ab85285286d" />
+
+<img width="465" height="864" alt="image" src="https://github.com/user-attachments/assets/cf489c03-ba2c-4b7d-8228-9326d35c02bd" />
+
+<img width="453" height="864" alt="image" src="https://github.com/user-attachments/assets/65b1acfb-e2cd-44ab-9154-aebf300d5eb5" />
+
 
 ### **3. Popup Hidden Gem**
 
-![Hidden Gem Popup](https://via.placeholder.com/900x500?text=Hidden+Gem)
+<img width="390" height="626" alt="image" src="https://github.com/user-attachments/assets/c2a6464d-d24a-4b23-ad84-097a2a239d95" />
 
 ### **4. Mood Map**
 
