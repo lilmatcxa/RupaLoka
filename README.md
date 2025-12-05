@@ -159,21 +159,26 @@ Digunakan untuk fitur UMKM List.
 
 <img width="390" height="626" alt="image" src="https://github.com/user-attachments/assets/c2a6464d-d24a-4b23-ad84-097a2a239d95" />
 
+![Gambar WhatsApp 2025-12-05 pukul 07 18 44_3f14d8bb](https://github.com/user-attachments/assets/02f8de8e-84d3-48f5-8298-dce243486351)
+
 ### **4. Mood Map**
 
-![Mood Map](https://via.placeholder.com/900x500?text=Mood+Map)
+![Gambar WhatsApp 2025-12-05 pukul 07 18 43_a18a4d4c](https://github.com/user-attachments/assets/51823041-629e-44d8-9bbd-dbb1fe39c58c)
+![Gambar WhatsApp 2025-12-05 pukul 07 18 43_ae2537eb](https://github.com/user-attachments/assets/d8c7b6db-b3d6-47cf-9c25-bd0fa27cff6b)
+
 
 ### **5. Explore List**
 
-![Explore List](https://via.placeholder.com/900x500?text=Explore+UMKM)
+![Uploading image.png…]()
 
 ### **6. Keranjang UMKM**
 
-![UMKM List](https://via.placeholder.com/900x500?text=UMKM+List)
+![Gambar WhatsApp 2025-12-05 pukul 07 18 42_1b138a45](https://github.com/user-attachments/assets/e36b3abe-1a57-45bf-ad87-3f546374b9c8)
 
 ### **7. Form Input Lokasi**
 
-![Input Lokasi](https://via.placeholder.com/900x500?text=Form+Input+Location)
+![Gambar WhatsApp 2025-12-05 pukul 07 18 44_5a7655ff](https://github.com/user-attachments/assets/2fcce923-0380-4ee0-a50e-6c617179d09c)
+
 
 ---
 
