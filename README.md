@@ -131,8 +131,6 @@ Digunakan untuk fitur UMKM List.
 
 # 🖼️ **Tangkapan Layar Komponen Penting**
 
-> *(Silakan upload gambar ke GitHub dan ganti linknya di sini)*
-
 ### **1. Halaman Discover (Gacha Kerajinan)**
 
 <img width="495" height="876" alt="image" src="https://github.com/user-attachments/assets/d639af11-2d9d-4608-a46a-b7940e48ed98" />
